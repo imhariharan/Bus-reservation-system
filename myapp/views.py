@@ -21,8 +21,29 @@ import base64
 from django.utils import timezone
 from django.core.mail import EmailMessage
 import time
+from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
+from .serializers import *
+from rest_framework import status, generics
+from rest_framework.views import APIView
+from django.db.models import Q
 
+class SeatsSerializerList(generics.ListAPIView):
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return HttpResponse("NOT VALID", content_type='text/plain')
+        else:
+            if self.request.method == 'GET':
+                username = self.request.user.username
+                print("db")
+                status = seats.objects.filter(visiname= username)
+                print (status)
+                stu = {"details": status}
+                print (stu)
+                return render (self.request, 'test.html', stu)
+    serializer_class = SeatsSerializer
 
+@csrf_exempt
 def index(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
@@ -32,7 +53,7 @@ def index(request):
     else:
         return render(request,'index.html',)
 
-
+@csrf_exempt
 @login_required
 def dashboard(request):
     if request.user.is_superuser:
@@ -40,7 +61,8 @@ def dashboard(request):
     else:
         return render(request,'inmates.html',)
 
-@login_required
+@csrf_exempt
+#@login_required
 def book(request):
     if request.method == 'POST':
         slot_req_name = request.POST.get("seatname")
@@ -59,7 +81,8 @@ def book(request):
         stu = {"details": status}
         return render(request,'book.html',stu)
 
-@login_required
+@csrf_exempt
+#@login_required
 def mybookings(request):
     if request.user.is_superuser:
         return HttpResponse("NOT VALID", content_type='text/plain')
@@ -70,7 +93,8 @@ def mybookings(request):
             stu = {"details": Image2 }
             return render(request,'mybook.html',stu)
 
-@login_required
+@csrf_exempt
+#@login_required
 def currentbookings_admin(request):
     if request.user.is_superuser:
         if request.method == 'GET':
@@ -87,24 +111,27 @@ def currentbookings_admin(request):
         return HttpResponse("NOT VALID", content_type='text/plain')
 
 
-
-@login_required
+@csrf_exempt
+#@login_required
 def allbookings_admin(request):
 	if request.user.is_superuser:
 		if request.method == 'GET':
 			Image3 = allbookings.objects.all()
 			stu = {"details":Image3}
 			return render(request,'allbookings_admin.html', stu)
+        #else:
+        #    return HttpResponse("NOT VALID", content_type='text/plain')
 
 
-
-@login_required
+@csrf_exempt
+#@login_required
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
 
 
 # Create your views here.
+@csrf_exempt
 def user_login(request):
     if request.user.is_authenticated:
             return HttpResponseRedirect(reverse('index'))
@@ -123,7 +150,7 @@ def user_login(request):
         else :
             return render(request,'login.html',)
 
-
+@csrf_exempt
 def authentication_view(request):
     registered = False
 

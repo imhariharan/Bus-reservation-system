@@ -16,9 +16,6 @@ class seats(models.Model):
     status =  models.CharField(max_length=50, choices= CHOICES, blank=True, default = "allow")
 
 
-
-
-
 class allbookings(models.Model):
     CHOICES = (
         ('allow', 'Allow'),

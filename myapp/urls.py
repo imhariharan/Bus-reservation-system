@@ -1,7 +1,7 @@
 from django.urls import path,include
 from django.conf.urls import url
 from . import views
-
+from .views import *
 urlpatterns = [
     url(r'^$', views.index,name='index'),
     url(r'^login/', views.user_login,name='user_login'),
@@ -12,5 +12,7 @@ urlpatterns = [
     url(r'^mybookings/', views.mybookings, name='mybookings'),
     url(r'^allbookings_admin/', views.allbookings_admin, name='allbookings_admin'),
     url(r'^currentbookings_admin/', views.currentbookings_admin, name='currentbookings_admin'),
+    url(r'^test_mybooking/', SeatsSerializerList.as_view()),
+
 
 ]
