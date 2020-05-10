@@ -27,21 +27,31 @@ from .serializers import *
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from django.db.models import Q
+from django.contrib.auth.models import User
+from .serializers import UserSerializer
+from rest_framework.decorators import api_view
+
 
 class SeatsSerializerList(generics.ListAPIView):
     def get_queryset(self):
-        if self.request.user.is_superuser:
-            return HttpResponse("NOT VALID", content_type='text/plain')
-        else:
-            if self.request.method == 'GET':
-                username = self.request.user.username
-                print("db")
-                status = seats.objects.filter(visiname= username)
-                print (status)
-                stu = {"details": status}
-                print (stu)
-                return render (self.request, 'test.html', stu)
+        if self.request.method == 'GET':
+            return seats.objects.all()
+
     serializer_class = SeatsSerializer
+
+class allSeatsSerializerList(generics.ListAPIView):
+    def get_queryset(self):
+        if self.request.method =='GET' :
+            return allbookings.objects.all()
+
+    serializer_class = allSeatsSerializer
+
+class UserSerializerList(generics.ListAPIView):
+    def get_queryset(self):
+        if self.request.method == 'GET':
+            return User.objects.all()
+
+    serializer_class = UserSerializer
 
 @csrf_exempt
 def index(request):

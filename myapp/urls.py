@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^allbookings_admin/', views.allbookings_admin, name='allbookings_admin'),
     url(r'^currentbookings_admin/', views.currentbookings_admin, name='currentbookings_admin'),
     url(r'^test_mybooking/', SeatsSerializerList.as_view()),
+    url(r'^test_allbooking/', allSeatsSerializerList.as_view()),
+    url(r'^test_login/', UserSerializerList.as_view()),
 
 
 ]
